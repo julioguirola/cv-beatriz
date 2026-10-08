@@ -1,0 +1,17 @@
+---
+/**
+ * Pie de página minimalista con los datos identificables.
+ */
+import { cv } from "../data/cv";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-line md:mt-32">
+  <div class="container-cv flex flex-col gap-2 py-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+    <p>
+      <span class="sr-only">Copyright </span>© {year} {cv.name}.
+    </p>
+    <p>{cv.role} · {cv.contact.location}</p>
+  </div>
+</footer>

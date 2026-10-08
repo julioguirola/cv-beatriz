@@ -1,0 +1,59 @@
+---
+/**
+ * Software: lista vertical con logos monocromos (SVG locales incrustados,
+ * color heredado) e indicador de nivel de 5 puntos accesible
+ * (role="img" + aria-label="Programa: nivel X de 5").
+ */
+import { cv, type SoftwareData } from "../data/cv";
+import { logos } from "../data/logos";
+
+const MAX_DOTS = 5;
+
+/** Logo monocromo a partir de la clave declarada en cv.ts. */
+function logoFor(item: SoftwareData): string {
+  return logos[item.logo] ?? monogram(item);
+}
+
+/** Monograma de reserva: cuadrado redondeado monocromo con las iniciales. */
+function monogram(item: SoftwareData): string {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" role="img" aria-hidden="true"><rect x="1.75" y="1.75" width="20.5" height="20.5" rx="5" stroke="currentColor" stroke-width="2"/><text x="12" y="12.6" text-anchor="middle" dominant-baseline="middle" font-family="Montserrat, Roboto, sans-serif" font-size="8.5" font-weight="700" letter-spacing="0.02em" fill="currentColor">${item.initials}</text></svg>`;
+}
+---
+
+<section id="software" aria-labelledby="software-title" data-reveal>
+  <h2 id="software-title" class="section-title">Software</h2>
+  <span class="section-rule" aria-hidden="true"></span>
+
+  <ul role="list" class="mt-7 space-y-5">
+    {
+      cv.software.map((item) => (
+        <li class="flex min-h-11 items-center gap-4" data-reveal>
+          <span
+            aria-hidden="true"
+            class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface text-graphite"
+          >
+            <svg class="size-6" set:html={logoFor(item)} />
+          </span>
+
+          <span class="min-w-0 flex-1 text-[0.95rem] font-medium text-ink">{item.name}</span>
+
+          <span
+            role="img"
+            aria-label={`${item.name}: nivel ${item.level} de 5`}
+            class="flex shrink-0 items-center gap-1.5"
+          >
+            {Array.from({ length: MAX_DOTS }, (_, i) => (
+              <span
+                aria-hidden="true"
+                class:list={[
+                  "size-2 rounded-full transition-colors",
+                  i < item.level ? "bg-accent" : "border border-line bg-transparent",
+                ]}
+              />
+            ))}
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+</section>

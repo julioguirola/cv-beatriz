@@ -1,17 +1,65 @@
 ---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Contact from "../components/Contact.astro";
+import Languages from "../components/Languages.astro";
+import SoftwareList from "../components/SoftwareList.astro";
+import SoftSkills from "../components/SoftSkills.astro";
+import Timeline from "../components/Timeline.astro";
+import HardSkills from "../components/HardSkills.astro";
+import HandArrow from "../components/HandArrow.astro";
+import Footer from "../components/Footer.astro";
+import { cv } from "../data/cv";
 
+// SEO: título (≤60 caracteres aprox.) y descripción (140–160 caracteres)
+const TITLE = "Beatriz Yuliet Guirola Alvarado | Arquitecta y Urbanista en Cuba";
+const DESCRIPTION =
+  "Arquitecta y urbanista en Ciego de Ávila, Cuba. Especialista en diseño arquitectónico, diseño interior, modelado 3D, dibujo técnico y renderizado.";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title={TITLE} description={DESCRIPTION}>
+  <Header>
+    <!-- Flechas decorativas (solo escritorio): dirigen la vista hacia el contenido -->
+    <HandArrow class="absolute bottom-0 left-[10%] hidden w-16 -translate-y-[8%] -rotate-6 text-ink lg:block" />
+    <HandArrow class="absolute right-[10%] bottom-0 hidden w-20 -scale-x-100 translate-y-[38%] rotate-3 text-ink lg:block" />
+  </Header>
+
+  <main id="contenido" class="container-cv mt-12 md:mt-20 lg:mt-24">
+    <div class="cv-grid">
+      <!-- Columna izquierda (4/12): contacto, idiomas, software, habilidades personales.
+           En móvil se aplana (contents) y las secciones se reordenan por prioridad. -->
+      <aside class="cv-col-left max-md:contents" aria-label="Contacto, idiomas, software y habilidades personales">
+        <div class="max-md:order-1">
+          <Contact />
+        </div>
+        <div class="max-md:order-5">
+          <SoftwareList />
+        </div>
+        <div class="max-md:order-6">
+          <Languages />
+        </div>
+        <div class="max-md:order-7">
+          <SoftSkills />
+        </div>
+      </aside>
+
+      <!-- Columna derecha (8/12): experiencia, estudios y habilidades -->
+      <div class="cv-col-right max-md:contents">
+        <div class="max-md:order-2">
+          <Timeline id="experiencia" title="Experiencia" entries={cv.experience} />
+        </div>
+        <div class="max-md:order-3">
+          <Timeline id="estudios" title="Estudios" entries={cv.education} />
+        </div>
+        <div class="max-md:order-4">
+          <HardSkills />
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+
+  <!-- Módulo externo (public/scripts/reveal.js): sin JS inline, CSP estricta -->
+  <script type="module" src="/scripts/reveal.js"></script>
+</Layout>

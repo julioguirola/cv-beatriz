@@ -1,0 +1,158 @@
+---
+// Fonts autoalojadas (@fontsource, font-display: swap por defecto) — solo subconjunto latino
+import "@fontsource/montserrat/latin-600.css";
+import "@fontsource/montserrat/latin-900.css";
+import "@fontsource/roboto/latin-300.css";
+import "@fontsource/roboto/latin-400.css";
+import "@fontsource/roboto/latin-500.css";
+import "../styles/global.css";
+
+// Precarga de la fuente crítica del nombre (mismo archivo que importa el CSS de @fontsource)
+import montserrat900 from "@fontsource/montserrat/files/montserrat-latin-900-normal.woff2?url";
+
+import { cv } from "../data/cv";
+
+interface Props {
+  /** <title> optimizado (50–60 caracteres). */
+  title: string;
+  /** <meta name="description"> (140–160 caracteres). */
+  description: string;
+}
+
+const { title, description } = Astro.props;
+
+/**
+ * URL base del sitio, derivada de `PUBLIC_SITE_URL` (ver astro.config.mjs).
+ * Todas las URLs canónicas, OG y de imágenes se construyen absolutas a partir de aquí.
+ */
+const site = Astro.site ?? new URL("https://beatrizguirola.com");
+const canonical = new URL(Astro.url.pathname, site);
+const ogImage = new URL("/og-image.png", site);
+
+/** ⚠️ Debe coincidir con `--color-accent` de src/styles/global.css (ver README). */
+const ACCENT = "#C2512F";
+
+const ogImageAlt =
+  "Cabecera del CV de Beatriz Yuliet Guirola Alvarado: su nombre en tipografía Montserrat pesada sobre fondo terracota, con el cargo Arquitecta y Urbanista.";
+
+/** Datos estructurados JSON-LD: Person + WebSite + ProfilePage (schema.org). */
+const personId = new URL("#persona", site).href;
+const websiteId = new URL("#sitio", site).href;
+const pageId = new URL("#pagina", site).href;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": personId,
+      name: cv.name,
+      givenName: cv.firstName,
+      familyName: cv.lastName,
+      jobTitle: cv.role,
+      url: site.href,
+      image: ogImage.href,
+      email: cv.contact.email,
+      telephone: cv.contact.phone,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: cv.contact.addressLocality,
+        addressCountry: cv.contact.addressCountry,
+      },
+      worksFor: {
+        "@type": "Organization",
+        name: cv.experience[0]?.org,
+      },
+      alumniOf: {
+        "@type": "CollegeOrUniversity",
+        name: cv.education[0]?.org,
+      },
+      knowsLanguage: ["es", "en"],
+      knowsAbout: [...cv.hardSkills.map((s) => s.toLowerCase()), "urbanismo"],
+    },
+    {
+      "@type": "WebSite",
+      "@id": websiteId,
+      url: site.href,
+      name: cv.name,
+      description,
+      inLanguage: "es",
+      publisher: { "@id": personId },
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": pageId,
+      url: canonical.href,
+      name: title,
+      isPartOf: { "@id": websiteId },
+      about: { "@id": personId },
+      inLanguage: "es",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.href} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="author" content={cv.name} />
+    <meta name="theme-color" content={ACCENT} />
+    <meta name="color-scheme" content="light" />
+    <meta name="generator" content={Astro.generator} />
+
+    <link rel="alternate" hreflang="es" href={canonical.href} />
+    <link rel="alternate" hreflang="x-default" href={canonical.href} />
+
+    <!-- Favicons y PWA -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Fuente crítica (nombre) autoalojada: se precarga para un LCP rápido -->
+    <link rel="preload" href={montserrat900} as="font" type="font/woff2" crossorigin />
+
+    <!-- Open Graph (vista previa al compartir: WhatsApp, Facebook, LinkedIn…) -->
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content={cv.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:image" content={ogImage.href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta property="profile:first_name" content={cv.firstName} />
+    <meta property="profile:last_name" content={cv.lastName} />
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage.href} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
+
+    <!-- Datos estructurados -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body class="bg-white font-sans text-graphite">
+    <!-- Enlace de salto para navegación con teclado -->
+    <a
+      href="#contenido"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:border-2 focus:border-accent focus:bg-white focus:px-5 focus:py-3 focus:font-medium focus:text-ink"
+    >
+      Saltar al contenido
+    </a>
+
+    <slot />
+  </body>
+</html>

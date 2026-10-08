@@ -1,0 +1,51 @@
+---
+/**
+ * Línea de tiempo reutilizable (experiencia y estudios): <ol> semántico con
+ * línea vertical fina y puntos por hito. El hito actual se marca con
+ * aria-current="true" y punto relleno de acento (ver global.css).
+ */
+import type { TimelineEntryData } from "../data/cv";
+
+interface Props {
+  /** Identificador del <section> (los ids de título se derivan de él). */
+  id: string;
+  /** Título de la sección. */
+  title: string;
+  /** Hitos en orden cronológico inverso (el actual primero). */
+  entries: TimelineEntryData[];
+}
+
+const { id, title, entries } = Astro.props;
+---
+
+<section id={id} aria-labelledby={`${id}-title`} data-reveal>
+  <h2 id={`${id}-title`} class="section-title">{title}</h2>
+  <span class="section-rule" aria-hidden="true"></span>
+
+  <ol class="timeline mt-8">
+    {
+      entries.map((entry) => (
+        <li class="timeline-item" aria-current={entry.current ? "true" : undefined} data-reveal>
+          {entry.period && (
+            <p
+              class:list={[
+                "text-[0.7rem] font-medium tracking-[0.18em] uppercase",
+                entry.current ? "text-accent" : "text-muted",
+              ]}
+            >
+              {entry.period}
+            </p>
+          )}
+
+          <h3 class="mt-1.5 font-display text-lg font-semibold text-ink md:text-xl">
+            {entry.title}
+          </h3>
+
+          {entry.org && (
+            <p class="mt-1.5 text-[0.95rem] leading-relaxed text-muted">{entry.org}</p>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</section>

@@ -1,0 +1,86 @@
+---
+/**
+ * Cabecera: bloque de color de acento a ancho completo con cuadrícula tenue
+ * de "plano", el nombre en Montserrat Black fluido y el cargo con tracking.
+ * Botones de acción visibles para el reclutador: email, WhatsApp y llamada.
+ */
+import { cv } from "../data/cv";
+
+// Logotipo oficial de WhatsApp en monocromo (generado en src/data/logos.ts)
+import { logos } from "../data/logos";
+---
+
+<header class="cv-header blueprint relative bg-accent text-white">
+  <div class="container-cv py-16 sm:py-20 md:py-24 lg:py-28">
+    <div class="max-w-4xl">
+      <p class="cv-overline hero-rise mb-6 text-xs font-medium tracking-[0.3em] text-white uppercase md:text-sm">
+        {cv.contact.location}
+      </p>
+
+      <h1 class="cv-name hero-rise text-white">{cv.name}</h1>
+
+      <p class="cv-role hero-rise mt-5 text-white md:mt-7">{cv.role}</p>
+
+      <span class="cv-rule hero-rise mt-8 block h-0.5 w-16 bg-white/70" aria-hidden="true"></span>
+
+      <div class="hero-rise mt-10 flex flex-wrap items-center gap-3 md:gap-4">
+        <a
+          href={`mailto:${cv.contact.email}`}
+          class="inline-flex min-h-11 items-center gap-2.5 rounded-full border border-white/80 px-6 py-3 text-sm font-medium tracking-wide text-white transition-colors duration-200 hover:bg-white hover:text-accent active:bg-white/90"
+          title="Escribir un email a Beatriz"
+        >
+          <svg
+            aria-hidden="true"
+            class="size-[18px]"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.75"
+            viewBox="0 0 24 24"
+          >
+            <rect height="16" rx="2" width="20" x="2" y="4"></rect>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+          </svg>
+          Escribir un email
+        </a>
+
+        <a
+          href={cv.contact.whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex min-h-11 items-center gap-2.5 rounded-full border border-white/80 px-6 py-3 text-sm font-medium tracking-wide text-white transition-colors duration-200 hover:bg-white hover:text-accent active:bg-white/90"
+          title="Abrir conversación de WhatsApp"
+        >
+          <svg aria-hidden="true" class="size-[18px] shrink-0" set:html={logos.whatsapp} />
+          WhatsApp
+        </a>
+
+        <a
+          href={cv.contact.phoneHref}
+          class="inline-flex min-h-11 items-center gap-2.5 rounded-full border border-white/80 px-6 py-3 text-sm font-medium tracking-wide text-white transition-colors duration-200 hover:bg-white hover:text-accent active:bg-white/90"
+          title="Llamar por teléfono"
+        >
+          <svg
+            aria-hidden="true"
+            class="size-[18px]"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.75"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+            ></path>
+          </svg>
+          Llamar
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flechas decorativas de trazo a mano (pasadas desde la página) -->
+  <slot />
+</header>

@@ -1,0 +1,407 @@
+/* ============================================================================
+   CV — Beatriz Yuliet Guirola Alvarado
+   Estilos globales · Tailwind CSS v4 (configuración CSS-first)
+   ============================================================================ */
+
+@import "tailwindcss";
+
+/* ----------------------------------------------------------------------------
+   TOKENS DE DISEÑO
+   ---------------------------------------------------------------------------- */
+@theme {
+  /* Paleta: escala de grises pura + un único acento (terracota arquitectónica).
+     ⚠️ Para cambiar el color de acento: edita `--color-accent` aquí y las
+     apariciones del mismo hex indicadas en el README («Cambiar el acento»). */
+  --color-ink: #111111;      /* negro carbón — jerarquías altas */
+  --color-graphite: #2b2b2b; /* gris grafito — cuerpo de texto */
+  --color-muted: #6b6b6b;   /* gris secundario */
+  --color-line: #d9d9d9;    /* líneas y bordes finos */
+  --color-surface: #f4f4f4;  /* superficies sutiles */
+  --color-accent: #c2512f;   /* ÚNICO color de acento (blanco sobre él: 4.65:1, AA) */
+
+  /* Tipografía: Montserrat (display) y Roboto (cuerpo), autoalojadas con @fontsource */
+  --font-sans: "Roboto", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Montserrat", "Roboto", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Alias legible solicitado para el acento (`--accent`). */
+:root {
+  --accent: var(--color-accent);
+}
+
+/* ----------------------------------------------------------------------------
+   BASE
+   ---------------------------------------------------------------------------- */
+@layer base {
+  html {
+    /* Sin scroll horizontal en ningún ancho (clip no crea contenedor de scroll) */
+    overflow-x: clip;
+  }
+
+  body {
+    background-color: #ffffff;
+    color: var(--color-graphite);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Anillo de foco visible en toda la página (anillo de acento) */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 0.125rem;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: #ffffff;
+  }
+
+  /* Sobre el fondo de acento, el anillo de foco pasa a blanco (visible, 4.65:1) */
+  .cv-header :focus-visible {
+    outline-color: #ffffff;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   COMPONENTES
+   ---------------------------------------------------------------------------- */
+@layer components {
+  /* Contenedor centrado de ~1200px */
+  .container-cv {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 1200px;
+    padding-inline: 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .container-cv {
+      padding-inline: 2rem;
+    }
+  }
+
+  /* ── Cabecera ─────────────────────────────────────────────────────────── */
+
+  /* Cuadrícula tenue de "plano arquitectónico" sobre el fondo de acento */
+  .blueprint {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.06) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+
+  /* Nombre fluido: nunca se desborda ni parte palabras de forma fea */
+  .cv-name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  /* Cargo bajo el nombre */
+  .cv-role {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(0.95rem, 2.4vw, 1.4rem);
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+  }
+
+  /* ── Títulos de sección ──────────────────────────────────────────────── */
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+
+  /* Línea corta decorativa bajo el título */
+  .section-rule {
+    display: block;
+    margin-top: 0.8rem;
+    height: 2px;
+    width: 2.5rem;
+    background-color: var(--color-ink);
+  }
+
+  /* ── Retícula de dos columnas (12 columnas: 4 izquierda · 8 derecha) ──── */
+  .cv-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    position: relative;
+  }
+
+  @media (min-width: 768px) {
+    .cv-grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    /* Línea vertical fina divisoria, exactamente en la línea de retícula 4/12 */
+    .cv-grid::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 33.333%;
+      width: 1px;
+      background-color: var(--color-line);
+    }
+  }
+
+  /* En móvil, las columnas se "aplanaan" (display: contents) para poder
+     reordenar las secciones con `order` según prioridad para el reclutador. */
+  .cv-col-left,
+  .cv-col-right {
+    min-width: 0;
+  }
+
+  @media (min-width: 768px) {
+    .cv-col-left {
+      grid-column: 1 / 5;
+      padding-right: 3rem;
+    }
+    .cv-col-right {
+      grid-column: 5 / 13;
+      padding-left: 3.5rem;
+    }
+    @media (min-width: 1024px) {
+      .cv-col-left {
+        padding-right: 4rem;
+      }
+      .cv-col-right {
+        padding-left: 4.5rem;
+      }
+    }
+  }
+
+  /* Ritmo vertical entre secciones (múltiplos de 8px) */
+  .cv-col-left > *,
+  .cv-col-right > * {
+    min-width: 0;
+  }
+
+  @media (max-width: 767px) {
+    .cv-col-left > *,
+    .cv-col-right > * {
+      margin-top: 4rem;
+    }
+    .cv-col-left > *:first-child {
+      margin-top: 0;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .cv-col-left > * + *,
+    .cv-col-right > * + * {
+      margin-top: 6rem;
+    }
+  }
+
+  /* ── Línea de tiempo ──────────────────────────────────────────────────── */
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding-left: 2.5rem;
+    padding-bottom: 2.75rem;
+  }
+  .timeline-item:last-child {
+    padding-bottom: 0;
+  }
+
+  /* Línea vertical fina que conecta los hitos (se detiene en el último punto) */
+  .timeline-item::before {
+    content: "";
+    position: absolute;
+    left: 5.5px;
+    top: 1.25rem;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--color-line);
+  }
+  .timeline-item:last-child::before {
+    content: none;
+  }
+
+  /* Puntos: contorneados; el hito actual, relleno de acento */
+  .timeline-item::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.35rem;
+    width: 13px;
+    height: 13px;
+    border-radius: 9999px;
+    border: 2px solid var(--color-graphite);
+    background-color: #ffffff;
+  }
+  .timeline-item[aria-current="true"]::after {
+    border-color: var(--color-accent);
+    background-color: var(--color-accent);
+  }
+
+  /* ── Aparición progresiva al hacer scroll (IntersectionObserver) ────────
+     El contenido solo se oculta si JS está activo (la clase `js` la añade el
+     script) y si el usuario no prefiere movimiento reducido. Sin JS: visible. */
+  @media (prefers-reduced-motion: no-preference) {
+    .js [data-reveal] {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+
+    .js [data-reveal].is-visible {
+      opacity: 1;
+      transform: none;
+      transition:
+        opacity 0.55s ease,
+        transform 0.55s cubic-bezier(0.22, 0.61, 0.21, 1);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+
+    /* Retardo escalonado de hitos y filas sin estilos inline (CSP-safe) */
+    .js [data-reveal]:nth-child(2) {
+      --reveal-delay: 90ms;
+    }
+    .js [data-reveal]:nth-child(3) {
+      --reveal-delay: 180ms;
+    }
+    .js [data-reveal]:nth-child(4) {
+      --reveal-delay: 270ms;
+    }
+    .js [data-reveal]:nth-child(5) {
+      --reveal-delay: 360ms;
+    }
+  }
+
+  /* ── Entrada de la cabecera al cargar (solo CSS, sin JS) ──────────────── */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-rise {
+      animation: hero-rise 0.7s cubic-bezier(0.22, 0.61, 0.21, 1) both;
+    }
+    .hero-rise:nth-child(1) {
+      animation-delay: 0ms;
+    }
+    .hero-rise:nth-child(2) {
+      animation-delay: 110ms;
+    }
+    .hero-rise:nth-child(3) {
+      animation-delay: 220ms;
+    }
+    .hero-rise:nth-child(4) {
+      animation-delay: 330ms;
+    }
+  }
+
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(22px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   IMPRESIÓN — CV en una página A4, conservando las dos columnas
+   (el área imprimible queda por debajo de 768px, así que la retícula de
+   escritorio se fuerza explícitamente)
+   ---------------------------------------------------------------------------- */
+@media print {
+  @page {
+    size: A4;
+    margin: 10mm 12mm;
+  }
+
+  html {
+    font-size: 10px; /* escala todas las medidas rem (tipografía y espaciado) */
+    overflow: visible;
+  }
+
+  body {
+    background: #ffffff !important;
+    overflow: visible;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  /* La cabecera pasa a blanco y negro (los navegadores no imprimen fondos) */
+  .cv-header {
+    background: none !important;
+    color: var(--color-ink) !important;
+    padding-block: 0 !important;
+  }
+  .cv-header .cv-name,
+  .cv-header .cv-role,
+  .cv-header .cv-overline {
+    color: var(--color-ink) !important;
+  }
+  .cv-header .section-rule,
+  .cv-header .cv-rule {
+    background-color: var(--color-ink) !important;
+  }
+
+  .cv-name {
+    font-size: 22pt;
+  }
+  .cv-role {
+    font-size: 9.5pt;
+  }
+
+  main {
+    margin-top: 6mm !important;
+  }
+
+  /* Fuerza la estructura de dos columnas 4/8 */
+  .cv-grid {
+    display: grid !important;
+    grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+  }
+  .cv-col-left,
+  .cv-col-right {
+    display: block !important;
+  }
+  .cv-col-left {
+    grid-column: 1 / 5 !important;
+    padding-right: 5mm !important;
+  }
+  .cv-col-right {
+    grid-column: 5 / 13 !important;
+    padding-left: 6mm !important;
+  }
+
+  .cv-col-left > *,
+  .cv-col-right > * {
+    margin-top: 5mm !important;
+    break-inside: avoid;
+  }
+
+  .timeline-item {
+    padding-bottom: 5mm;
+  }
+
+  /* Contenido siempre visible al imprimir aunque quede bajo el pliegue */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+}

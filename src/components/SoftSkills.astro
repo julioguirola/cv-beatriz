@@ -1,0 +1,22 @@
+---
+/**
+ * Habilidades personales: etiquetas en forma de píldora con contorno fino,
+ * bordes totalmente redondeados y hover sutil.
+ */
+import { cv } from "../data/cv";
+---
+
+<section id="habilidades-personales" aria-labelledby="habilidades-personales-title" data-reveal>
+  <h2 id="habilidades-personales-title" class="section-title">Habilidades personales</h2>
+  <span class="section-rule" aria-hidden="true"></span>
+
+  <ul role="list" class="mt-7 flex flex-wrap gap-3">
+    {
+      cv.softSkills.map((skill) => (
+        <li class="cursor-default rounded-full border border-graphite px-5 py-2.5 text-sm font-normal text-graphite transition-colors duration-200 hover:border-ink hover:text-ink">
+          {skill}
+        </li>
+      ))
+    }
+  </ul>
+</section>

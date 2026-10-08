@@ -1,0 +1,23 @@
+---
+/**
+ * Habilidades (hard skills): lista limpia con marcadores minimalistas
+ * (cuadraditos) en dos columnas en escritorio.
+ */
+import { cv } from "../data/cv";
+---
+
+<section id="habilidades" aria-labelledby="habilidades-title" data-reveal>
+  <h2 id="habilidades-title" class="section-title">Habilidades</h2>
+  <span class="section-rule" aria-hidden="true"></span>
+
+  <ul role="list" class="mt-7 grid grid-cols-1 gap-x-10 gap-y-3.5 sm:grid-cols-2">
+    {
+      cv.hardSkills.map((skill) => (
+        <li class="flex items-center gap-3 text-[0.95rem] text-graphite">
+          <span aria-hidden="true" class="size-1.5 shrink-0 bg-ink"></span>
+          {skill}
+        </li>
+      ))
+    }
+  </ul>
+</section>
